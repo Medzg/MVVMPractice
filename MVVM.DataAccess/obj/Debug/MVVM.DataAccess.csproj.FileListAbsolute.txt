@@ -1,0 +1,17 @@
+D:\Simple Train\MVVM\MVVM.DataAccess\bin\Debug\MVVM.DataAccess.dll
+D:\Simple Train\MVVM\MVVM.DataAccess\bin\Debug\MVVM.DataAccess.pdb
+D:\Simple Train\MVVM\MVVM.DataAccess\bin\Debug\MVVM.Model.dll
+D:\Simple Train\MVVM\MVVM.DataAccess\bin\Debug\MVVM.Model.pdb
+D:\Simple Train\MVVM\MVVM.DataAccess\obj\Debug\MVVM.DataAccess.csprojAssemblyReference.cache
+D:\Simple Train\MVVM\MVVM.DataAccess\obj\Debug\MVVM.DataAccess.csproj.CoreCompileInputs.cache
+D:\Simple Train\MVVM\MVVM.DataAccess\obj\Debug\MVVM.DataAccess.csproj.CopyComplete
+D:\Simple Train\MVVM\MVVM.DataAccess\obj\Debug\MVVM.DataAccess.dll
+D:\Simple Train\MVVM\MVVM.DataAccess\obj\Debug\MVVM.DataAccess.pdb
+D:\Simple Train\MVVM\MVVM.DataAccess\bin\Debug\MVVM.DataAccess.dll.config
+D:\Simple Train\MVVM\MVVM.DataAccess\bin\Debug\EntityFramework.dll
+D:\Simple Train\MVVM\MVVM.DataAccess\bin\Debug\EntityFramework.SqlServer.dll
+D:\Simple Train\MVVM\MVVM.DataAccess\bin\Debug\EntityFramework.xml
+D:\Simple Train\MVVM\MVVM.DataAccess\bin\Debug\EntityFramework.SqlServer.xml
+D:\Simple Train\MVVM\MVVM.DataAccess\obj\Debug\MVVM.DataAccess.Migrations.IntialData.resources
+D:\Simple Train\MVVM\MVVM.DataAccess\obj\Debug\MVVM.DataAccess.csproj.GenerateResource.cache
+D:\Simple Train\MVVM\MVVM.DataAccess\bin\Debug\MVVM.Model.dll.config
