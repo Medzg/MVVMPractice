@@ -1,6 +1,5 @@
 D:\Simple Train\MVVM\MVVM.Model\bin\Debug\MVVM.Model.dll
 D:\Simple Train\MVVM\MVVM.Model\bin\Debug\MVVM.Model.pdb
-D:\Simple Train\MVVM\MVVM.Model\obj\Debug\MVVM.Model.csprojAssemblyReference.cache
 D:\Simple Train\MVVM\MVVM.Model\obj\Debug\MVVM.Model.csproj.CoreCompileInputs.cache
 D:\Simple Train\MVVM\MVVM.Model\obj\Debug\MVVM.Model.dll
 D:\Simple Train\MVVM\MVVM.Model\obj\Debug\MVVM.Model.pdb

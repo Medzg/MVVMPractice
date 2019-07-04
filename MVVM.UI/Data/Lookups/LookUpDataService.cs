@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MVVM.UI.Data
+namespace MVVM.UI.Data.Lookups
 {
      public class LookUpDataService : ILookUpDataService
     {

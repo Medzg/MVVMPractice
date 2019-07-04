@@ -1,5 +1,8 @@
 ﻿using MVVM.Model;
 using MVVM.UI.Data;
+using MVVM.UI.Event;
+using MVVM.UI.View.Services;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,23 +14,54 @@ namespace MVVM.UI.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        public MainViewModel(INavigationViewModel navigationViewModel,IFriendDetailViewModel friendDetailViewModel)
+        public MainViewModel(INavigationViewModel navigationViewModel,Func<IFriendDetailViewModel> friendDetailViewModelCreator,IEventAggregator eventAggregator , IMessageDialogService messageDialogeService )
         {
+            _eventAggregator = eventAggregator;
+            _messageDialogService = messageDialogeService;
             NavigationViewModel = navigationViewModel;
-            FriendDetailViewModel = friendDetailViewModel; 
+            _friendDetailViewModel = friendDetailViewModelCreator;
+            _eventAggregator.GetEvent<OpenFriendEvent>().Subscribe(OnOpenFriendAsync);
         }
+
+        private IEventAggregator _eventAggregator;
+        private IMessageDialogService _messageDialogService;
 
         public INavigationViewModel NavigationViewModel { get; }
 
-        public IFriendDetailViewModel FriendDetailViewModel { get;}
-    
+        private Func<IFriendDetailViewModel> _friendDetailViewModel;
+
+        private IFriendDetailViewModel friendDetailViewModel;
+
+        public IFriendDetailViewModel FriendDetailViewModel
+        {
+            get { return friendDetailViewModel; }
+            set { friendDetailViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public async Task LoadAsync()
         {
             await NavigationViewModel.LoadAsync();
         }
 
 
-        
 
+        private async void OnOpenFriendAsync(int FriendId)
+        {
+            if(FriendDetailViewModel != null && FriendDetailViewModel.HasChanged)
+            {
+                var result = _messageDialogService.ShowOkCancelDialog("you made a change ! are you sure to leave , all changes goona lost.", "Warning");
+                if(result == MessageDialogResult.Cancel)
+                {
+                    return;
+                }
+
+            }
+          FriendDetailViewModel =  _friendDetailViewModel();
+            await FriendDetailViewModel.LoadAsync(FriendId);
+
+        }
     }
 }

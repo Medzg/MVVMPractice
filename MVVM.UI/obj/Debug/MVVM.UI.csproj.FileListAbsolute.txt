@@ -35,3 +35,4 @@ D:\Simple Train\MVVM\MVVM.UI\obj\Debug\View\FriendDetailView.baml
 D:\Simple Train\MVVM\MVVM.UI\bin\Debug\Prism.dll
 D:\Simple Train\MVVM\MVVM.UI\bin\Debug\Prism.pdb
 D:\Simple Train\MVVM\MVVM.UI\bin\Debug\Prism.xml
+D:\Simple Train\MVVM\MVVM.UI\obj\Debug\App.baml

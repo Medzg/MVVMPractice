@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using MVVM.Model;
 
-namespace MVVM.UI.Data
+namespace MVVM.UI.Data.Lookups
 {
     public interface ILookUpDataService
     {

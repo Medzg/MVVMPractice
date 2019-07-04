@@ -4,9 +4,10 @@ using MVVM.Model;
 
 namespace MVVM.UI.Data
 {
-    public interface IFriendDataService
+    public interface IFriendDataRepository
     {
         Task<Friend> GetByIdAsync(int FriendId);
-        Task SaveAsync(Friend friend);
+        Task SaveAsync();
+        bool HasChanges();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MVVM.Model;
 using MVVM.UI.Data;
+using MVVM.UI.Data.Lookups;
 using MVVM.UI.Event;
 using Prism.Events;
 using System;

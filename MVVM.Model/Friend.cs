@@ -16,7 +16,7 @@ namespace MVVM.Model
         [StringLength(60)]
         public string LastName { get; set; }
         [StringLength(60)]
-        
+        [EmailAddress]
         public string Email { get; set; }
     }
 }

@@ -15,23 +15,37 @@ namespace MVVM.UI.ViewModel
 {
    public class FriendDetailViewModel : ViewModelBase, IFriendDetailViewModel
     {
-        private IFriendDataService _dataService;
+        private IFriendDataRepository _dataRepository;
         private IEventAggregator _eventAggregator;
         private FriendWrapper _friend;
-        public FriendDetailViewModel(IFriendDataService friendDataService,IEventAggregator eventAggregator)
+        public FriendDetailViewModel(IFriendDataRepository friendDataRepository,IEventAggregator eventAggregator)
         {
 
-            _dataService = friendDataService;
+            _dataRepository = friendDataRepository;
             _eventAggregator = eventAggregator;
-            _eventAggregator.GetEvent<OpenFriendEvent>().Subscribe(OnOpenFriendAsync);
+         
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExectute);
         }
 
         public async Task LoadAsync(int FriendId)
         {
 
-            var friend = await _dataService.GetByIdAsync(FriendId);
+            var friend = await _dataRepository.GetByIdAsync(FriendId);
             this.Friend = new FriendWrapper(friend);
+
+            this.Friend.PropertyChanged += (s, e) =>
+             {
+                 if (!HasChanged)
+                 {
+                     HasChanged = _dataRepository.HasChanges();
+                 }
+
+                 if(e.PropertyName == nameof(Friend.HasErrors))
+                 {
+                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                 }
+             };
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
         }
 
         public FriendWrapper Friend
@@ -44,11 +58,27 @@ namespace MVVM.UI.ViewModel
             }
         }
 
+        private bool _HasChanged;
+
+        public bool HasChanged
+        {
+            get { return _HasChanged; }
+            set { 
+                if(_HasChanged != value) {
+                    _HasChanged = value;
+                    OnPropertyChanged();
+                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                }
+            }
+        }
+
+
         public ICommand SaveCommand { get; }
 
         private async void OnSaveExecute()
         {
-            await _dataService.SaveAsync(Friend.Model);
+            await _dataRepository.SaveAsync();
+            HasChanged = _dataRepository.HasChanges();
             _eventAggregator.GetEvent<AfterSaveFriendEvent>().Publish(new AfterSavedEventArgs
             {
                 Id = this.Friend.Id,
@@ -60,14 +90,10 @@ namespace MVVM.UI.ViewModel
         private bool OnSaveCanExectute()
         {
 
-            return true;
+            return Friend!=null && !Friend.HasErrors && HasChanged;
         }
 
-        private async void OnOpenFriendAsync(int FriendId)
-        {
-            await LoadAsync(FriendId);
-           
-        }
+        
 
     }
 }
