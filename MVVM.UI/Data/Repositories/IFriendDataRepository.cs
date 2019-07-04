@@ -11,5 +11,6 @@ namespace MVVM.UI.Data
         Task SaveAsync();
         bool HasChanges();
         void Add(Friend friend);
+        void Delete(Friend model);
     }
 }

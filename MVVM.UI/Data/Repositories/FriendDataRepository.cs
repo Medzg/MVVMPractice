@@ -24,6 +24,11 @@ namespace MVVM.UI.Data
             _context.Friends.Add(friend);
         }
 
+        public void Delete(Friend model)
+        {
+            _context.Friends.Remove(model);
+        }
+
         public async Task<Friend> GetByIdAsync(int FriendId)
         {
           

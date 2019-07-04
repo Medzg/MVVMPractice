@@ -20,6 +20,17 @@ namespace MVVM.UI.ViewModel
             _LookUpService = friendLookUpService;
             Friends = new ObservableCollection<NavigationItemViewModel>();
             _eventAggregator.GetEvent<AfterSaveFriendEvent>().Subscribe(AfterFriendSaved);
+            _eventAggregator.GetEvent<AfterDeleteEvent>().Subscribe(AfterFriendDeleted);
+        }
+
+        private void AfterFriendDeleted(int FriendId)
+        {
+            var friend = Friends.SingleOrDefault(fr => fr.Id == FriendId);
+            if(friend != null)
+            {
+                Friends.Remove(friend);
+
+            }
         }
 
         private void AfterFriendSaved(AfterSavedEventArgs SavedFriend)

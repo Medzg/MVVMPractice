@@ -25,6 +25,15 @@ namespace MVVM.UI.ViewModel
             _eventAggregator = eventAggregator;
          
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExectute);
+            DeleteCommand = new DelegateCommand(onDelete);
+            
+        }
+
+        private async void onDelete()
+        {
+            _dataRepository.Delete(Friend.Model);
+            _eventAggregator.GetEvent<AfterDeleteEvent>().Publish(Friend.Id);
+           await _dataRepository.SaveAsync();
         }
 
         public async Task LoadAsync(int? FriendId)
@@ -87,6 +96,7 @@ namespace MVVM.UI.ViewModel
 
 
         public ICommand SaveCommand { get; }
+        public ICommand DeleteCommand { get; }
 
         private async void OnSaveExecute()
         {

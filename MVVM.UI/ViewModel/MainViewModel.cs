@@ -24,6 +24,12 @@ namespace MVVM.UI.ViewModel
             _friendDetailViewModel = friendDetailViewModelCreator;
             _eventAggregator.GetEvent<OpenFriendEvent>().Subscribe(OnOpenFriendAsync);
             CreateNewFriendCommand = new DelegateCommand(OnCreateNewFriendExecute);
+            _eventAggregator.GetEvent<AfterDeleteEvent>().Subscribe(OnDeleteFriend);
+        }
+
+        private void OnDeleteFriend(int FriendId)
+        {
+            FriendDetailViewModel = null;
         }
 
         private void OnCreateNewFriendExecute()

@@ -72,6 +72,7 @@
     <Compile Include="Data\Lookups\LookUpDataService.cs" />
     <Compile Include="Data\Repositories\FriendDataRepository.cs" />
     <Compile Include="Data\Repositories\IFriendDataRepository.cs" />
+    <Compile Include="Event\AfterDeleteEvent.cs" />
     <Compile Include="Event\AfterSaveFriendEvent.cs" />
     <Compile Include="Event\OpenFriendEvent.cs" />
     <Compile Include="Startup\BootStrapper.cs" />
