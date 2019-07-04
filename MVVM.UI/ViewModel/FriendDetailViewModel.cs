@@ -1,6 +1,7 @@
 ﻿using MVVM.Model;
 using MVVM.UI.Data;
 using MVVM.UI.Event;
+using MVVM.UI.View.Services;
 using MVVM.UI.Wrapper;
 using Prism.Commands;
 using Prism.Events;
@@ -15,11 +16,14 @@ namespace MVVM.UI.ViewModel
 {
    public class FriendDetailViewModel : ViewModelBase, IFriendDetailViewModel
     {
+        private IMessageDialogService _messageDialogService;
         private IFriendDataRepository _dataRepository;
         private IEventAggregator _eventAggregator;
         private FriendWrapper _friend;
-        public FriendDetailViewModel(IFriendDataRepository friendDataRepository,IEventAggregator eventAggregator)
+        public FriendDetailViewModel(IFriendDataRepository friendDataRepository,IEventAggregator eventAggregator,IMessageDialogService messageDialogService)
         {
+
+            _messageDialogService = messageDialogService;
 
             _dataRepository = friendDataRepository;
             _eventAggregator = eventAggregator;
@@ -31,9 +35,13 @@ namespace MVVM.UI.ViewModel
 
         private async void onDelete()
         {
+
+            var result = _messageDialogService.ShowOkCancelDialog($"Are you sure you want to delete {Friend.FirstName} {Friend.LastName}","Question");
+            if(result == MessageDialogResult.Ok) { 
             _dataRepository.Delete(Friend.Model);
             _eventAggregator.GetEvent<AfterDeleteEvent>().Publish(Friend.Id);
            await _dataRepository.SaveAsync();
+        }
         }
 
         public async Task LoadAsync(int? FriendId)
