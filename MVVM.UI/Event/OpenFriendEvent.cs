@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MVVM.UI.Event
 {
-   public class OpenFriendEvent : PubSubEvent<int>
+   public class OpenFriendEvent : PubSubEvent<int?>
     {
     }
 }

@@ -27,10 +27,10 @@ namespace MVVM.UI.ViewModel
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExectute);
         }
 
-        public async Task LoadAsync(int FriendId)
+        public async Task LoadAsync(int? FriendId)
         {
 
-            var friend = await _dataRepository.GetByIdAsync(FriendId);
+            var friend = FriendId.HasValue? await _dataRepository.GetByIdAsync(FriendId.Value):CreateNewFriend();
             this.Friend = new FriendWrapper(friend);
 
             this.Friend.PropertyChanged += (s, e) =>
@@ -46,6 +46,19 @@ namespace MVVM.UI.ViewModel
                  }
              };
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            if (Friend.Id == 0)
+            {
+                Friend.FirstName = "";
+            }
+        }
+
+        private Friend CreateNewFriend()
+        {
+            var friend = new Friend();
+            _dataRepository.Add(friend);
+            return friend; 
+
+               
         }
 
         public FriendWrapper Friend
@@ -85,6 +98,7 @@ namespace MVVM.UI.ViewModel
                 DisplayName = this.Friend.FirstName + " " + this.Friend.LastName
 
             });
+            
         }
 
         private bool OnSaveCanExectute()

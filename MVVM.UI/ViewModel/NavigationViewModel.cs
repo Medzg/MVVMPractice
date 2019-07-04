@@ -24,10 +24,15 @@ namespace MVVM.UI.ViewModel
 
         private void AfterFriendSaved(AfterSavedEventArgs SavedFriend)
         {
-          var lookup =  Friends.Single(Friend => Friend.Id == SavedFriend.Id);
-            lookup.FirstName = SavedFriend.DisplayName; 
-           
+          var lookup =  Friends.SingleOrDefault(Friend => Friend.Id == SavedFriend.Id);
+            if (lookup == null)
+            {
+                Friends.Add(new NavigationItemViewModel(SavedFriend.Id, SavedFriend.DisplayName, _eventAggregator));
+            }
+            else { 
+            lookup.FirstName = SavedFriend.DisplayName;
 
+            }
         }
         public ObservableCollection<NavigationItemViewModel> Friends { get; private set; }
         public async Task LoadAsync()
@@ -36,7 +41,7 @@ namespace MVVM.UI.ViewModel
             Friends.Clear();
             foreach(var look in lookup)
             {
-                Friends.Add(new NavigationItemViewModel (look.Id , look.FirstName));
+                Friends.Add(new NavigationItemViewModel (look.Id , look.FirstName,_eventAggregator));
             }
         }
 
@@ -45,18 +50,7 @@ namespace MVVM.UI.ViewModel
 
       
 
-        private NavigationItemViewModel _selectedFriend;
-
-        public NavigationItemViewModel SelectedFriend
-        {
-            get { return _selectedFriend; }
-            set { _selectedFriend = value;
-               OnPropertyChanged();
-                if(_selectedFriend != null) {
-                    _eventAggregator.GetEvent<OpenFriendEvent>().Publish(_selectedFriend.Id);
-                        }
-            }
-        }
+       
 
     }
 }

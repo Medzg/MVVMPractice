@@ -8,6 +8,14 @@
              d:DesignHeight="450" d:DesignWidth="300">
     
     <Grid>
-        <ListView ItemsSource="{Binding Friends}" DisplayMemberPath="FirstName" SelectedItem="{Binding SelectedFriend ,Mode=TwoWay}"></ListView>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <ItemsControl ItemsSource="{Binding Friends}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                        <Button Content="{Binding FirstName}" Command="{Binding OpenFriendDetailViewCommand}"></Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </UserControl>

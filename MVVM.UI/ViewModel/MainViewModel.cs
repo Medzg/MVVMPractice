@@ -2,6 +2,7 @@
 using MVVM.UI.Data;
 using MVVM.UI.Event;
 using MVVM.UI.View.Services;
+using Prism.Commands;
 using Prism.Events;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MVVM.UI.ViewModel
 {
@@ -21,12 +23,19 @@ namespace MVVM.UI.ViewModel
             NavigationViewModel = navigationViewModel;
             _friendDetailViewModel = friendDetailViewModelCreator;
             _eventAggregator.GetEvent<OpenFriendEvent>().Subscribe(OnOpenFriendAsync);
+            CreateNewFriendCommand = new DelegateCommand(OnCreateNewFriendExecute);
+        }
+
+        private void OnCreateNewFriendExecute()
+        {
+            OnOpenFriendAsync(null);
         }
 
         private IEventAggregator _eventAggregator;
         private IMessageDialogService _messageDialogService;
 
         public INavigationViewModel NavigationViewModel { get; }
+        public ICommand CreateNewFriendCommand { get; }
 
         private Func<IFriendDetailViewModel> _friendDetailViewModel;
 
@@ -48,7 +57,7 @@ namespace MVVM.UI.ViewModel
 
 
 
-        private async void OnOpenFriendAsync(int FriendId)
+        private async void OnOpenFriendAsync(int? FriendId)
         {
             if(FriendDetailViewModel != null && FriendDetailViewModel.HasChanged)
             {

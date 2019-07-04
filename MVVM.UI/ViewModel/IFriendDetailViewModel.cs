@@ -4,7 +4,7 @@ namespace MVVM.UI.ViewModel
 {
     public interface IFriendDetailViewModel
     {
-        Task LoadAsync(int FriendId);
+        Task LoadAsync(int? FriendId);
         bool HasChanged { get; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MVVM.DataAccess;
 using MVVM.Model;
+using MVVM.UI.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -17,6 +18,12 @@ namespace MVVM.UI.Data
         {
             _context = context; 
         }
+
+        public void Add(Friend friend)
+        {
+            _context.Friends.Add(friend);
+        }
+
         public async Task<Friend> GetByIdAsync(int FriendId)
         {
           

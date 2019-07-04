@@ -6,6 +6,16 @@
              DispatcherUnhandledException="Application_DispatcherUnhandledException">
     <Application.Resources>
         <Style TargetType="TextBox">
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <StackPanel>
+                            <AdornedElementPlaceholder x:Name="placeholder"/>
+                            <TextBlock FontSize="12" Foreground="PaleVioletRed" Text="{Binding ElementName=placeholder,Path=AdornedElement.(Validation.Errors)[0].ErrorContent}"></TextBlock>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
            
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="True">
