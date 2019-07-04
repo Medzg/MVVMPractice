@@ -18,5 +18,9 @@ namespace MVVM.Model
         [StringLength(60)]
         [EmailAddress]
         public string Email { get; set; }
+
+        public int? FavoriteLangugeId { get; set; }
+
+        public ProgrammingLanguage FavoriteLanguge { get; set; }
     }
 }

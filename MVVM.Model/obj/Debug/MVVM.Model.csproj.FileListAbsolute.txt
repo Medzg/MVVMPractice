@@ -9,3 +9,4 @@ D:\Simple Train\MVVM\MVVM.Model\bin\Debug\EntityFramework.SqlServer.dll
 D:\Simple Train\MVVM\MVVM.Model\bin\Debug\EntityFramework.xml
 D:\Simple Train\MVVM\MVVM.Model\bin\Debug\EntityFramework.SqlServer.xml
 D:\Simple Train\MVVM\MVVM.Model\obj\Debug\MVVM.Model.csproj.CopyComplete
+D:\Simple Train\MVVM\MVVM.Model\obj\Debug\MVVM.Model.csprojAssemblyReference.cache

@@ -7,6 +7,8 @@ namespace MVVM.DataAccess
     public class FriendDbContext : DbContext
     {
         public DbSet<Friend> Friends { get; set; }
+
+        public DbSet<ProgrammingLanguage> ProgrammingLanguages { get; set; }
         public FriendDbContext():base("FriendDb")
         {
 

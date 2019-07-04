@@ -21,6 +21,12 @@ namespace MVVM.DataAccess.Migrations
              new Friend { FirstName = "Mohd", LastName = "Zal" },
             new Friend { FirstName = "Mod", LastName = "hal" },
             new Friend { FirstName = "amed", LastName = "al" });
+
+            context.ProgrammingLanguages.AddOrUpdate(pl => pl.Name, 
+                new ProgrammingLanguage { Name = "C#" },
+                new ProgrammingLanguage { Name = "JS" },
+                new ProgrammingLanguage { Name = "Java" }
+                );
         }
     }
 }
