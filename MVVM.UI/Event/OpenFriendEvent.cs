@@ -7,7 +7,13 @@ using System.Threading.Tasks;
 
 namespace MVVM.UI.Event
 {
-   public class OpenFriendEvent : PubSubEvent<int?>
+   public class OpenDetailEvent : PubSubEvent<OpenDetailEventArgs>
     {
+    }
+    public class OpenDetailEventArgs
+    {
+        public int? Id { get; set; }
+        public string ViewModelName { get; set; }
+
     }
 }

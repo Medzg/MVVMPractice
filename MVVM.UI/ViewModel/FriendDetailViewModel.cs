@@ -77,7 +77,7 @@ namespace MVVM.UI.ViewModel
             var result = _messageDialogService.ShowOkCancelDialog($"Are you sure you want to delete {Friend.FirstName} {Friend.LastName}","Question");
             if(result == MessageDialogResult.Ok) { 
             _dataRepository.Delete(Friend.Model);
-            _eventAggregator.GetEvent<AfterDeleteEvent>().Publish(Friend.Id);
+            _eventAggregator.GetEvent<AfterDeleteEvent>().Publish(new AfterDeleteEventArgs { Id= Friend.Id ,ViewModelName = nameof(FriendDetailViewModel)});
            await _dataRepository.SaveAsync();
         }
         }
@@ -211,8 +211,9 @@ namespace MVVM.UI.ViewModel
             _eventAggregator.GetEvent<AfterSaveFriendEvent>().Publish(new AfterSavedEventArgs
             {
                 Id = this.Friend.Id,
-                DisplayName = this.Friend.FirstName + " " + this.Friend.LastName
-
+                DisplayName = this.Friend.FirstName + " " + this.Friend.LastName,
+                ViewModelNew = nameof(FriendDetailViewModel)
+                
             });
             
         }

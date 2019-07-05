@@ -13,21 +13,24 @@ namespace MVVM.UI.ViewModel
    public class NavigationItemViewModel :ViewModelBase
     {
 
-        public NavigationItemViewModel( int id , string displayMember,IEventAggregator eventAggregator)
+        public NavigationItemViewModel( int id , string displayMember,IEventAggregator eventAggregator,string detailViewModelName)
         {
+            _detailViewModelName = detailViewModelName;
             Id = id;
            FirstName = displayMember;
-            OpenFriendDetailViewCommand = new DelegateCommand(OnOpenFriendDetailView);
+            OpenDetailViewCommand = new DelegateCommand(OnOpenDetailViewExecute);
             _eventAggregator = eventAggregator;        }
 
-        private void OnOpenFriendDetailView()
+        private void OnOpenDetailViewExecute()
         {
-            _eventAggregator.GetEvent<OpenFriendEvent>().Publish(Id);
+            _eventAggregator.GetEvent<OpenDetailEvent>().Publish(new OpenDetailEventArgs { Id = Id, ViewModelName = _detailViewModelName });
         }
+
+        private string _detailViewModelName;
 
         public int Id { get;}
         private string _firstName;
-        public ICommand OpenFriendDetailViewCommand { get; }
+        public ICommand OpenDetailViewCommand { get; }
 
         private IEventAggregator _eventAggregator;
 

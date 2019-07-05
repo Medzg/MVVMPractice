@@ -19,32 +19,43 @@ namespace MVVM.UI.ViewModel
             _eventAggregator = eventAggregator;
             _LookUpService = friendLookUpService;
             Friends = new ObservableCollection<NavigationItemViewModel>();
-            _eventAggregator.GetEvent<AfterSaveFriendEvent>().Subscribe(AfterFriendSaved);
+            _eventAggregator.GetEvent<AfterSaveFriendEvent>().Subscribe(AfterDetailSaved);
             _eventAggregator.GetEvent<AfterDeleteEvent>().Subscribe(AfterFriendDeleted);
         }
 
-        private void AfterFriendDeleted(int FriendId)
+        private void AfterFriendDeleted(AfterDeleteEventArgs args)
         {
-            var friend = Friends.SingleOrDefault(fr => fr.Id == FriendId);
-            if(friend != null)
-            {
-                Friends.Remove(friend);
+            switch(args.ViewModelName){
 
+
+                case nameof(FriendDetailViewModel):
+                    var friend = Friends.SingleOrDefault(fr => fr.Id == args.Id);
+                    if (friend != null)
+                    {
+                        Friends.Remove(friend);
+
+                    }
+                    break;
             }
+         
         }
 
-        private void AfterFriendSaved(AfterSavedEventArgs SavedFriend)
+        private void AfterDetailSaved(AfterSavedEventArgs SavedFriend)
         {
+            switch (SavedFriend.ViewModelNew) {
+                case nameof(FriendDetailViewModel)  :
           var lookup =  Friends.SingleOrDefault(Friend => Friend.Id == SavedFriend.Id);
             if (lookup == null)
             {
-                Friends.Add(new NavigationItemViewModel(SavedFriend.Id, SavedFriend.DisplayName, _eventAggregator));
+                Friends.Add(new NavigationItemViewModel(SavedFriend.Id, SavedFriend.DisplayName, _eventAggregator,nameof(FriendDetailViewModel)));
             }
             else { 
             lookup.FirstName = SavedFriend.DisplayName;
 
             }
+                    break;  
         }
+    }
         public ObservableCollection<NavigationItemViewModel> Friends { get; private set; }
         public async Task LoadAsync()
         {
@@ -52,7 +63,7 @@ namespace MVVM.UI.ViewModel
             Friends.Clear();
             foreach(var look in lookup)
             {
-                Friends.Add(new NavigationItemViewModel (look.Id , look.FirstName,_eventAggregator));
+                Friends.Add(new NavigationItemViewModel (look.Id , look.FirstName,_eventAggregator,nameof(FriendDetailViewModel) ));
             }
         }
 

@@ -7,7 +7,13 @@ using System.Threading.Tasks;
 
 namespace MVVM.UI.Event
 {
-    class AfterDeleteEvent: PubSubEvent<int>
+    class AfterDeleteEvent: PubSubEvent<AfterDeleteEventArgs>
     {
+    }  
+    public class AfterDeleteEventArgs
+    {
+
+        public int Id { get; set; }
+        public string ViewModelName { get; set; }
     }
 }

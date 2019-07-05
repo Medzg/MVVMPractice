@@ -10,52 +10,34 @@ using System.Threading.Tasks;
 
 namespace MVVM.UI.Data
 {
-  public  class FriendDataRepository : IFriendDataRepository
+    public  class FriendDataRepository : GenericRepository<Friend,FriendDbContext> ,IFriendDataRepository
     {
-        private FriendDbContext _context;
+        
 
-        public FriendDataRepository(FriendDbContext context)
+        public FriendDataRepository(FriendDbContext context) :base(context)
         {
-            _context = context; 
+         
         }
 
-        public void Add(Friend friend)
-        {
-            _context.Friends.Add(friend);
-        }
+      
+       
 
-        public void Delete(Friend model)
-        {
-            _context.Friends.Remove(model);
-        }
-
-        public async Task<Friend> GetByIdAsync(int FriendId)
+        public override async Task<Friend> GetByIdAsync(int FriendId)
         {
           
       
-               return await _context.Friends.Include(f=>f.PhoneNumbers).SingleAsync(fr=> fr.Id == FriendId);
+               return await Context.Friends.Include(f=>f.PhoneNumbers).SingleAsync(fr=> fr.Id == FriendId);
        
 
         }
 
-        public bool HasChanges()
-        {
-            return _context.ChangeTracker.HasChanges();
-        }
+      
 
         public void RemovePhoneNumber(FriendPhoneNumber model)
         {
-            _context.PhoneNumbers.Remove(model);
+            Context.PhoneNumbers.Remove(model);
         }
 
-        public async Task SaveAsync()
-        {
-           
-        
-
-               
-               await _context.SaveChangesAsync();
-           
-        }
+      
     }
 }

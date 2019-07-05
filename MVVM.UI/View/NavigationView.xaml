@@ -12,7 +12,7 @@
         <ItemsControl ItemsSource="{Binding Friends}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                        <Button Content="{Binding FirstName}" Command="{Binding OpenFriendDetailViewCommand}"></Button>
+                        <Button Content="{Binding FirstName}" Command="{Binding OpenDetailViewCommand}"></Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

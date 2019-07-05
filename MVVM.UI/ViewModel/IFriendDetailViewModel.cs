@@ -1,10 +1,7 @@
-﻿using System.Threading.Tasks;
-
-namespace MVVM.UI.ViewModel
+﻿namespace MVVM.UI.ViewModel
 {
-    public interface IFriendDetailViewModel
+    public interface IFriendDetailViewModel : IDetailViewModel
     {
-        Task LoadAsync(int? FriendId);
-        bool HasChanged { get; }
+
     }
 }

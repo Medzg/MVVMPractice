@@ -14,5 +14,6 @@ namespace MVVM.UI.Event
     {
         public int Id { get; set; }
         public string DisplayName { get; set; }
+        public string ViewModelNew { get; set; }
     }
 }

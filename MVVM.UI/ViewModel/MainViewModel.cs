@@ -22,35 +22,35 @@ namespace MVVM.UI.ViewModel
             _messageDialogService = messageDialogeService;
             NavigationViewModel = navigationViewModel;
             _friendDetailViewModel = friendDetailViewModelCreator;
-            _eventAggregator.GetEvent<OpenFriendEvent>().Subscribe(OnOpenFriendAsync);
-            CreateNewFriendCommand = new DelegateCommand(OnCreateNewFriendExecute);
-            _eventAggregator.GetEvent<AfterDeleteEvent>().Subscribe(OnDeleteFriend);
+            _eventAggregator.GetEvent<OpenDetailEvent>().Subscribe(OnOpenDetailViewAsync);
+            CreateNewDetailCommand = new DelegateCommand<Type>(OnCreateNewDetailExecute);
+            _eventAggregator.GetEvent<AfterDeleteEvent>().Subscribe(OnDelete);
         }
 
-        private void OnDeleteFriend(int FriendId)
+        private void OnDelete(AfterDeleteEventArgs args)
         {
-            FriendDetailViewModel = null;
+            DetailViewModel = null;
         }
 
-        private void OnCreateNewFriendExecute()
+        private void OnCreateNewDetailExecute(Type viewModelType)
         {
-            OnOpenFriendAsync(null);
+            OnOpenDetailViewAsync(new OpenDetailEventArgs { ViewModelName =  viewModelType.Name});
         }
 
         private IEventAggregator _eventAggregator;
         private IMessageDialogService _messageDialogService;
 
         public INavigationViewModel NavigationViewModel { get; }
-        public ICommand CreateNewFriendCommand { get; }
+        public ICommand CreateNewDetailCommand { get; }
 
         private Func<IFriendDetailViewModel> _friendDetailViewModel;
 
-        private IFriendDetailViewModel friendDetailViewModel;
+        private IDetailViewModel _detailViewModel;
 
-        public IFriendDetailViewModel FriendDetailViewModel
+        public IDetailViewModel DetailViewModel
         {
-            get { return friendDetailViewModel; }
-            set { friendDetailViewModel = value;
+            get { return _detailViewModel; }
+            set { _detailViewModel = value;
                 OnPropertyChanged();
             }
         }
@@ -63,9 +63,9 @@ namespace MVVM.UI.ViewModel
 
 
 
-        private async void OnOpenFriendAsync(int? FriendId)
+        private async void OnOpenDetailViewAsync(OpenDetailEventArgs  args)
         {
-            if(FriendDetailViewModel != null && FriendDetailViewModel.HasChanged)
+            if(DetailViewModel != null && DetailViewModel.HasChanged)
             {
                 var result = _messageDialogService.ShowOkCancelDialog("you made a change ! are you sure to leave , all changes goona lost.", "Warning");
                 if(result == MessageDialogResult.Cancel)
@@ -74,8 +74,14 @@ namespace MVVM.UI.ViewModel
                 }
 
             }
-          FriendDetailViewModel =  _friendDetailViewModel();
-            await FriendDetailViewModel.LoadAsync(FriendId);
+            switch (args.ViewModelName)
+            {
+                case nameof(FriendDetailViewModel): 
+                DetailViewModel = _friendDetailViewModel();
+                    break;  
+        }
+          
+            await DetailViewModel.LoadAsync(args.Id);
 
         }
     }
