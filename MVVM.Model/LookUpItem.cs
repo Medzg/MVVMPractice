@@ -6,4 +6,8 @@
 
         public string FirstName { get; set; }
     }
+    public class NullLookUpItem : LookUpItem
+    {
+        public new int? Id { get; set; }
+    }
 }

@@ -69,6 +69,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\Lookups\ILookUpDataService.cs" />
+    <Compile Include="Data\Lookups\ILookUpProgramingLangagueDataService.cs" />
     <Compile Include="Data\Lookups\LookUpDataService.cs" />
     <Compile Include="Data\Repositories\FriendDataRepository.cs" />
     <Compile Include="Data\Repositories\IFriendDataRepository.cs" />
@@ -91,6 +92,7 @@
     </Compile>
     <Compile Include="View\Services\IMessageDialogService.cs" />
     <Compile Include="View\Services\MessageDialogService.cs" />
+    <Compile Include="Wrapper\FriendPhoneWrapper.cs" />
     <Compile Include="Wrapper\FriendWrapper.cs" />
     <Compile Include="Wrapper\ModelWrapper.cs" />
     <Compile Include="Wrapper\NotifyDataErrorInfoBase.cs" />

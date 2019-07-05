@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,10 @@ namespace MVVM.Model
 {
     public class Friend
     {
+        public Friend()
+        {
+            PhoneNumbers = new Collection<FriendPhoneNumber>();
+        }
         public int Id { get; set; }
         [Required]
         [StringLength(60)]
@@ -22,5 +27,7 @@ namespace MVVM.Model
         public int? FavoriteLangugeId { get; set; }
 
         public ProgrammingLanguage FavoriteLanguge { get; set; }
+
+        public ICollection<FriendPhoneNumber> PhoneNumbers { get; set; }
     }
 }

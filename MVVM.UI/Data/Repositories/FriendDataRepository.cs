@@ -33,7 +33,7 @@ namespace MVVM.UI.Data
         {
           
       
-               return await _context.Friends.SingleAsync(fr=> fr.Id == FriendId);
+               return await _context.Friends.Include(f=>f.PhoneNumbers).SingleAsync(fr=> fr.Id == FriendId);
        
 
         }
@@ -41,6 +41,11 @@ namespace MVVM.UI.Data
         public bool HasChanges()
         {
             return _context.ChangeTracker.HasChanges();
+        }
+
+        public void RemovePhoneNumber(FriendPhoneNumber model)
+        {
+            _context.PhoneNumbers.Remove(model);
         }
 
         public async Task SaveAsync()

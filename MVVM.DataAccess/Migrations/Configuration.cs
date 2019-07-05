@@ -27,6 +27,8 @@ namespace MVVM.DataAccess.Migrations
                 new ProgrammingLanguage { Name = "JS" },
                 new ProgrammingLanguage { Name = "Java" }
                 );
+            context.SaveChanges();
+            context.PhoneNumbers.AddOrUpdate(pn => pn.Number, new FriendPhoneNumber { Number = "+12 12345678", FriendId = context.Friends.First().Id });
         }
     }
 }

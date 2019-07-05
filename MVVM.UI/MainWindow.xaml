@@ -7,7 +7,7 @@
         xmlns:view ="clr-namespace:MVVM.UI.View"
         xmlns:ViewModel ="clr-namespace:MVVM.UI.ViewModel"
         mc:Ignorable="d"
-        Title="APP" Height="450" Width="800" FontSize="20">
+        Title="APP" Height="700" Width="900" FontSize="20">
     <Window.Resources>
         <DataTemplate DataType="{x:Type ViewModel:FriendDetailViewModel}">
             <view:FriendDetailView/>

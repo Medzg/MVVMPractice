@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MVVM.UI.Data.Lookups
 {
-     public class LookUpDataService : ILookUpDataService
+     public class LookUpDataService : ILookUpDataService, ILookUpProgramingLangagueDataService
     {
         private Func<FriendDbContext> _context;
 
@@ -29,6 +29,22 @@ namespace MVVM.UI.Data.Lookups
                 }).ToListAsync();
 
             }
+        }
+
+        public async Task<IEnumerable<LookUpItem>> GetProgramingLangagueAsync()
+        {
+            using (var ctx = _context())
+            {
+                return await ctx.ProgrammingLanguages.AsNoTracking().Select(PL => new LookUpItem
+                {
+
+                    Id = PL.Id,
+                    FirstName = PL.Name
+                }).ToListAsync();
+
+            }
+
+
         }
         
 
