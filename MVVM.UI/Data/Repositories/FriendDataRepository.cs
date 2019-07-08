@@ -26,11 +26,17 @@ namespace MVVM.UI.Data.Repositories
         }
 
       
+        public async Task<bool> HasMeetingAsync(int friendID)
+        {
+            return await Context.Meetings.AsNoTracking().Include(m => m.Friends).AnyAsync(m => m.Friends.Any(f => f.Id == friendID));
 
+        }
         public void RemovePhoneNumber(FriendPhoneNumber model)
         {
             Context.PhoneNumbers.Remove(model);
         }
+
+
 
       
     }

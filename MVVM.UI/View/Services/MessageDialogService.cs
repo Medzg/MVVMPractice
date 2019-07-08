@@ -15,6 +15,11 @@ namespace MVVM.UI.View.Services
             return result.Equals(MessageBoxResult.OK) ? MessageDialogResult.Ok : MessageDialogResult.Cancel;
         }
 
+        public void ShowInfoDialog(string text)
+        {
+            MessageBox.Show(text, "Info");
+        }
+
     }
    public enum MessageDialogResult
     {

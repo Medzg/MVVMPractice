@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MVVM.UI.View"
              xmlns:ToolKit="http://schemas.xceed.com/wpf/xaml/toolkit"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             xmlns:model ="clr-namespace:MVVM.Model;assembly=MVVM.Model"
+             mc:Ignorable="d" Width="647.255" Height="443.363">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -26,6 +26,31 @@
         <Label Content="End" Grid.Row="4" Margin="10 10 10 0"/>
         <ToolKit:DateTimePicker Grid.Row="5" Value="{Binding Meeting.DateTo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
 
+        <Grid Grid.Row="6" Margin="10">
+            <Grid.Resources>
+                <DataTemplate DataType="{x:Type model:Friend}">
+                    <TextBlock><Run Text="{Binding FirstName}"/> <Run Text="{Binding LastName}"/></TextBlock>
+                </DataTemplate>
+
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Content="Added Friend"/>
+            <ListView Grid.Row="1" ItemsSource="{Binding AddedFriends}" SelectedItem="{Binding SelectedAddedFriend}"/>
+            <StackPanel Grid.Row="1" Grid.Column="1">
+                <Button Content="&lt;&lt;" Margin="10" Command="{Binding AddFriendCommand}"/>
+                <Button Content="&gt;&gt;" Margin="10 0 10 10" Command="{Binding RemoveFriendCommand}"/>
+            </StackPanel>
+            <Label Content="Availbe Friends" Grid.Column="2"/>
+            <ListView Grid.Row="1" ItemsSource="{Binding AvailableFriends}" SelectedItem="{Binding SelectedAvailableFriend}" Grid.Column="2"/>
+        </Grid>
         <StackPanel Grid.Row="7" Orientation="Horizontal">
             <Button Content="Save" Width="75" Margin="10" Command="{Binding SaveCommand}"/>
             <Button Content="Delete" Width="75" Margin="10" Command="{Binding DeleteCommand}"/>

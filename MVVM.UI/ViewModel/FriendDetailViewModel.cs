@@ -73,6 +73,11 @@ namespace MVVM.UI.ViewModel
 
         protected override async void onDeleteExecute()
         {
+            if( await _dataRepository.HasMeetingAsync(Friend.Id))
+            {
+                _messageDialogService.ShowInfoDialog($"You can't delete {Friend.FirstName} {Friend.LastName} cause he have at least one meeting to do ");
+                return;
+            }
 
             var result = _messageDialogService.ShowOkCancelDialog($"Are you sure you want to delete {Friend.FirstName} {Friend.LastName}","Question");
             if(result == MessageDialogResult.Ok) { 
