@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MVVM.UI.Data.Lookups
 {
-     public class LookUpDataService : ILookUpDataService, ILookUpProgramingLangagueDataService
+     public class LookUpDataService : ILookUpDataService, ILookUpProgramingLangagueDataService, IMeetingLookUpDataService
     {
         private Func<FriendDbContext> _context;
 
@@ -46,8 +46,26 @@ namespace MVVM.UI.Data.Lookups
 
 
         }
-        
+
+        public async Task<IEnumerable<LookUpItem>> GetMeetingLookUpAsync()
+        {
+            using (var ctx = _context())
+            {
+                return  await ctx.Meetings.AsNoTracking().Select(PL => new LookUpItem
+                {
+
+                    Id = PL.Id,
+                    FirstName = PL.Title
+                }).ToListAsync();
+
+            }
+
 
         }
+
+
+
+
+    }
     }
 

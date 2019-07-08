@@ -39,7 +39,12 @@ namespace MVVM.UI.Wrapper
             }
             set
             {
+
                 SetValue(value);
+                if(DateTo < DateFrom)
+                {
+                    DateFrom = DateTo;
+                }
             }
         }
         public DateTime DateTo
@@ -52,6 +57,10 @@ namespace MVVM.UI.Wrapper
             set
             {
                 SetValue(value);
+                if (DateTo < DateFrom)
+                {
+                    DateTo = DateFrom ;
+                }
             }
         }
 

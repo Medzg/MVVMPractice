@@ -14,11 +14,13 @@ namespace MVVM.UI.ViewModel
 {
    public class NavigationViewModel :ViewModelBase ,  INavigationViewModel
     {
-        public NavigationViewModel(ILookUpDataService friendLookUpService,IEventAggregator eventAggregator)
+        public NavigationViewModel(ILookUpDataService friendLookUpService,IEventAggregator eventAggregator,IMeetingLookUpDataService meetingLookUpDataService)
         {
             _eventAggregator = eventAggregator;
             _LookUpService = friendLookUpService;
+            _meetingLookUpDataService = meetingLookUpDataService; 
             Friends = new ObservableCollection<NavigationItemViewModel>();
+            Meetings = new ObservableCollection<NavigationItemViewModel>();
             _eventAggregator.GetEvent<AfterSaveFriendEvent>().Subscribe(AfterDetailSaved);
             _eventAggregator.GetEvent<AfterDeleteEvent>().Subscribe(AfterFriendDeleted);
         }
@@ -29,34 +31,54 @@ namespace MVVM.UI.ViewModel
 
 
                 case nameof(FriendDetailViewModel):
-                    var friend = Friends.SingleOrDefault(fr => fr.Id == args.Id);
-                    if (friend != null)
-                    {
-                        Friends.Remove(friend);
-
-                    }
+                    AfterFriendDeleted(Friends, args);
+                    break;
+                case nameof(MeetingDetailViewModel):
+                    AfterFriendDeleted(Meetings, args);
                     break;
             }
          
+        }
+
+        private void AfterFriendDeleted(ObservableCollection<NavigationItemViewModel> items, AfterDeleteEventArgs args)
+        {
+            var item = items.SingleOrDefault(fr => fr.Id == args.Id);
+            if (item != null)
+            {
+               items.Remove(item);
+
+            }
         }
 
         private void AfterDetailSaved(AfterSavedEventArgs SavedFriend)
         {
             switch (SavedFriend.ViewModelNew) {
                 case nameof(FriendDetailViewModel)  :
-          var lookup =  Friends.SingleOrDefault(Friend => Friend.Id == SavedFriend.Id);
-            if (lookup == null)
-            {
-                Friends.Add(new NavigationItemViewModel(SavedFriend.Id, SavedFriend.DisplayName, _eventAggregator,nameof(FriendDetailViewModel)));
-            }
-            else { 
-            lookup.FirstName = SavedFriend.DisplayName;
+                    AfterDetailSaved(Friends, SavedFriend);
+            break;
+                case nameof(MeetingDetailViewModel):
+                    AfterDetailSaved(Meetings, SavedFriend);
+                    break;
 
             }
-                    break;  
-        }
     }
+
+        private void AfterDetailSaved(ObservableCollection<NavigationItemViewModel> items, AfterSavedEventArgs obj)
+        {
+            var lookup = items.SingleOrDefault(Friend => Friend.Id == obj.Id);
+            if (lookup == null)
+            {
+                items.Add(new NavigationItemViewModel(obj.Id, obj.DisplayName, _eventAggregator, obj.ViewModelNew));
+            }
+            else
+            {
+                lookup.FirstName = obj.DisplayName;
+
+            }
+        }
+
         public ObservableCollection<NavigationItemViewModel> Friends { get; private set; }
+        public ObservableCollection<NavigationItemViewModel> Meetings { get; private set; }
         public async Task LoadAsync()
         {
             var lookup = await _LookUpService.GetFriendLookUpAsync();
@@ -65,14 +87,16 @@ namespace MVVM.UI.ViewModel
             {
                 Friends.Add(new NavigationItemViewModel (look.Id , look.FirstName,_eventAggregator,nameof(FriendDetailViewModel) ));
             }
+            lookup = await _meetingLookUpDataService.GetMeetingLookUpAsync();
+            Meetings.Clear();
+            foreach (var look in lookup)
+            {
+                Meetings.Add(new NavigationItemViewModel(look.Id, look.FirstName, _eventAggregator, nameof(MeetingDetailViewModel)));
+            }
         }
 
         private IEventAggregator _eventAggregator;
         private ILookUpDataService _LookUpService;
-
-      
-
-       
-
+        private IMeetingLookUpDataService _meetingLookUpDataService;
     }
 }

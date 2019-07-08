@@ -1,6 +1,7 @@
 ﻿using MVVM.Model;
 using MVVM.UI.Data;
 using MVVM.UI.Data.Lookups;
+using MVVM.UI.Data.Repositories;
 using MVVM.UI.Event;
 using MVVM.UI.View.Services;
 using MVVM.UI.Wrapper;
@@ -173,9 +174,7 @@ namespace MVVM.UI.ViewModel
             }
         }
 
-        private bool _HasChanged;
-
-       
+ 
 
         public FriendPhoneWrapper SelectedFriendPhone
         {

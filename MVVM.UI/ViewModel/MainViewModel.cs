@@ -1,4 +1,5 @@
-﻿using MVVM.Model;
+﻿using Autofac.Features.Indexed;
+using MVVM.Model;
 using MVVM.UI.Data;
 using MVVM.UI.Event;
 using MVVM.UI.View.Services;
@@ -16,12 +17,13 @@ namespace MVVM.UI.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        public MainViewModel(INavigationViewModel navigationViewModel,Func<IFriendDetailViewModel> friendDetailViewModelCreator,IEventAggregator eventAggregator , IMessageDialogService messageDialogeService )
+        public MainViewModel(INavigationViewModel navigationViewModel,IIndex<string,IDetailViewModel> detailViewModelCreator ,IEventAggregator eventAggregator , IMessageDialogService messageDialogeService )
         {
+            
             _eventAggregator = eventAggregator;
             _messageDialogService = messageDialogeService;
             NavigationViewModel = navigationViewModel;
-            _friendDetailViewModel = friendDetailViewModelCreator;
+            _detailViewModelCreator = detailViewModelCreator;
             _eventAggregator.GetEvent<OpenDetailEvent>().Subscribe(OnOpenDetailViewAsync);
             CreateNewDetailCommand = new DelegateCommand<Type>(OnCreateNewDetailExecute);
             _eventAggregator.GetEvent<AfterDeleteEvent>().Subscribe(OnDelete);
@@ -37,13 +39,17 @@ namespace MVVM.UI.ViewModel
             OnOpenDetailViewAsync(new OpenDetailEventArgs { ViewModelName =  viewModelType.Name});
         }
 
+      
         private IEventAggregator _eventAggregator;
         private IMessageDialogService _messageDialogService;
 
         public INavigationViewModel NavigationViewModel { get; }
+
+        private IIndex<string, IDetailViewModel> _detailViewModelCreator;
+
         public ICommand CreateNewDetailCommand { get; }
 
-        private Func<IFriendDetailViewModel> _friendDetailViewModel;
+  
 
         private IDetailViewModel _detailViewModel;
 
@@ -74,13 +80,8 @@ namespace MVVM.UI.ViewModel
                 }
 
             }
-            switch (args.ViewModelName)
-            {
-                case nameof(FriendDetailViewModel): 
-                DetailViewModel = _friendDetailViewModel();
-                    break;  
-        }
-          
+
+            DetailViewModel = _detailViewModelCreator[args.ViewModelName];
             await DetailViewModel.LoadAsync(args.Id);
 
         }
