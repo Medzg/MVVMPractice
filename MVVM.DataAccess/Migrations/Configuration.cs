@@ -2,6 +2,7 @@ namespace MVVM.DataAccess.Migrations
 {
     using MVVM.Model;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
@@ -29,6 +30,22 @@ namespace MVVM.DataAccess.Migrations
                 );
             context.SaveChanges();
             context.PhoneNumbers.AddOrUpdate(pn => pn.Number, new FriendPhoneNumber { Number = "+12 12345678", FriendId = context.Friends.First().Id });
+
+            context.Meetings.AddOrUpdate(pn => pn.Title,
+                new Meeting
+                {
+
+                    Title = "WatchingMovie",
+                    DateFrom = new DateTime(2018, 5, 26),
+                    DateTo  =  new DateTime(2018, 7, 26),
+                    Friends = new List<Friend>
+                    {
+                        context.Friends.Single(f=> f.FirstName == "Mohamed" && f.LastName =="Zghal"),
+                        context.Friends.Single(f=>f.FirstName =="Med"&& f.LastName == "Zg" )
+                    }
+                });
+
+
         }
     }
 }

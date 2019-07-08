@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Threading.Tasks;
 
-namespace MVVM.UI.Data
+namespace MVVM.UI.Data.Repositories
 {
     public class GenericRepository<TEntity,TContext> : IGenericRepository<TEntity>
         where TContext : DbContext

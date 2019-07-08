@@ -10,6 +10,7 @@ namespace MVVM.DataAccess
 
         public DbSet<ProgrammingLanguage> ProgrammingLanguages { get; set; }
         public DbSet<FriendPhoneNumber> PhoneNumbers { get; set; }
+        public DbSet<Meeting> Meetings { get; set; }
         public FriendDbContext():base("FriendDb")
         {
 

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MVVM.UI.Data
+namespace MVVM.UI.Data.Repositories
 {
     public  class FriendDataRepository : GenericRepository<Friend,FriendDbContext> ,IFriendDataRepository
     {
@@ -18,17 +18,11 @@ namespace MVVM.UI.Data
         {
          
         }
-
-      
-       
-
         public override async Task<Friend> GetByIdAsync(int FriendId)
         {
-          
-      
+
                return await Context.Friends.Include(f=>f.PhoneNumbers).SingleAsync(fr=> fr.Id == FriendId);
        
-
         }
 
       

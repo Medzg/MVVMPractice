@@ -17,3 +17,4 @@ D:\Simple Train\MVVM\MVVM.DataAccess\obj\Debug\MVVM.DataAccess.csproj.GenerateRe
 D:\Simple Train\MVVM\MVVM.DataAccess\bin\Debug\MVVM.Model.dll.config
 D:\Simple Train\MVVM\MVVM.DataAccess\obj\Debug\MVVM.DataAccess.Migrations.AddedProgramingLang.resources
 D:\Simple Train\MVVM\MVVM.DataAccess\obj\Debug\MVVM.DataAccess.Migrations.AddFriendPhoneNumber.resources
+D:\Simple Train\MVVM\MVVM.DataAccess\obj\Debug\MVVM.DataAccess.Migrations.AddedMeeting.resources

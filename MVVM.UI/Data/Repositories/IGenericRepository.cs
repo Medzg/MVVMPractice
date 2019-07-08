@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace MVVM.UI.Data
+namespace MVVM.UI.Data.Repositories
 {
     public interface IGenericRepository<T>
     {

@@ -17,28 +17,27 @@ using System.Windows.Input;
 
 namespace MVVM.UI.ViewModel
 {
-   public class FriendDetailViewModel : ViewModelBase, IFriendDetailViewModel
+   public class FriendDetailViewModel : DetailViewModelBase, IFriendDetailViewModel
     {
         private IMessageDialogService _messageDialogService;
         private IFriendDataRepository _dataRepository;
-        private IEventAggregator _eventAggregator;
+        
         private ILookUpProgramingLangagueDataService _lookUpProgramingLangagueDataService;
         private FriendPhoneWrapper _selectedFriendPhone;
 
         public ObservableCollection<LookUpItem> ProgramingLangagues { get; }
 
         private FriendWrapper _friend;
-        public FriendDetailViewModel(IFriendDataRepository friendDataRepository,IEventAggregator eventAggregator,IMessageDialogService messageDialogService, ILookUpProgramingLangagueDataService programingLangagueDataService)
+        public FriendDetailViewModel(IFriendDataRepository friendDataRepository,IEventAggregator eventAggregator,IMessageDialogService messageDialogService, ILookUpProgramingLangagueDataService programingLangagueDataService) :base(eventAggregator)
         {
 
             _messageDialogService = messageDialogService;
 
             _dataRepository = friendDataRepository;
-            _eventAggregator = eventAggregator;
+            
             _lookUpProgramingLangagueDataService = programingLangagueDataService;
             ProgramingLangagues = new ObservableCollection<LookUpItem>();
-            SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExectute);
-            DeleteCommand = new DelegateCommand(onDelete);
+           
             AddPhoneNumber = new DelegateCommand(OnAddNewPhoneNumber);
             DeletePhoneNumber = new DelegateCommand(OnDeletePhoneNumber, OnDeleteDeletePhoneCanExcute);
 
@@ -71,18 +70,19 @@ namespace MVVM.UI.ViewModel
             return SelectedFriendPhone != null; 
         }
 
-        private async void onDelete()
+        protected override async void onDeleteExecute()
         {
 
             var result = _messageDialogService.ShowOkCancelDialog($"Are you sure you want to delete {Friend.FirstName} {Friend.LastName}","Question");
             if(result == MessageDialogResult.Ok) { 
             _dataRepository.Delete(Friend.Model);
-            _eventAggregator.GetEvent<AfterDeleteEvent>().Publish(new AfterDeleteEventArgs { Id= Friend.Id ,ViewModelName = nameof(FriendDetailViewModel)});
+                RaiseDetailDeletedEvent( Friend.Id);
+           
            await _dataRepository.SaveAsync();
         }
         }
 
-        public async Task LoadAsync(int? FriendId)
+        public override async Task LoadAsync(int? FriendId)
         {
 
             var friend = FriendId.HasValue ? await _dataRepository.GetByIdAsync(FriendId.Value) : CreateNewFriend();
@@ -175,17 +175,7 @@ namespace MVVM.UI.ViewModel
 
         private bool _HasChanged;
 
-        public bool HasChanged
-        {
-            get { return _HasChanged; }
-            set { 
-                if(_HasChanged != value) {
-                    _HasChanged = value;
-                    OnPropertyChanged();
-                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-                }
-            }
-        }
+       
 
         public FriendPhoneWrapper SelectedFriendPhone
         {
@@ -198,27 +188,21 @@ namespace MVVM.UI.ViewModel
             }
         }
 
-        public ICommand SaveCommand { get; }
-        public ICommand DeleteCommand { get; }
+
 
         public ICommand AddPhoneNumber { get;}
         public ICommand DeletePhoneNumber { get; }
 
-        private async void OnSaveExecute()
+       protected override  async void OnSaveExecute()
         {
             await _dataRepository.SaveAsync();
             HasChanged = _dataRepository.HasChanges();
-            _eventAggregator.GetEvent<AfterSaveFriendEvent>().Publish(new AfterSavedEventArgs
-            {
-                Id = this.Friend.Id,
-                DisplayName = this.Friend.FirstName + " " + this.Friend.LastName,
-                ViewModelNew = nameof(FriendDetailViewModel)
-                
-            });
+            RaiseDetailSavedEvent(Friend.Id, this.Friend.FirstName + " " + this.Friend.LastName);
+          
             
         }
 
-        private bool OnSaveCanExectute()
+       protected override bool onSaveCanExecute()
         {
 
             return Friend != null && !Friend.HasErrors && PhoneNumbers.All(pn => !pn.HasErrors)

@@ -72,11 +72,14 @@
     <Compile Include="Data\Lookups\ILookUpProgramingLangagueDataService.cs" />
     <Compile Include="Data\Lookups\LookUpDataService.cs" />
     <Compile Include="Data\Repositories\FriendDataRepository.cs" />
+    <Compile Include="Data\Repositories\GenericRepository.cs" />
     <Compile Include="Data\Repositories\IFriendDataRepository.cs" />
+    <Compile Include="Data\Repositories\IGenericRepository.cs" />
     <Compile Include="Event\AfterDeleteEvent.cs" />
     <Compile Include="Event\AfterSaveFriendEvent.cs" />
     <Compile Include="Event\OpenFriendEvent.cs" />
     <Compile Include="Startup\BootStrapper.cs" />
+    <Compile Include="ViewModel\DetailViewModelBase.cs" />
     <Compile Include="ViewModel\FriendDetailViewModel.cs" />
     <Compile Include="ViewModel\IDetailViewModel.cs" />
     <Compile Include="ViewModel\IFriendDetailViewModel.cs" />
