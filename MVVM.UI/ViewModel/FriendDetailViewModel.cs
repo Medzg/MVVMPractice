@@ -215,6 +215,7 @@ namespace MVVM.UI.ViewModel
             HasChanged = _dataRepository.HasChanges();
             Id = Friend.Id;
             RaiseDetailSavedEvent(Friend.Id, this.Friend.FirstName + " " + this.Friend.LastName);
+            MessageDialogeService.ShowInfoDialog("Update Sucess");
           
             
         }

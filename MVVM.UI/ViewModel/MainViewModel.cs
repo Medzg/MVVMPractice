@@ -96,6 +96,7 @@ namespace MVVM.UI.ViewModel
                 detailViewModel = _detailViewModelCreator[args.ViewModelName];
                 await detailViewModel.LoadAsync(args.Id);
                 DetailViewModels.Add(detailViewModel);
+
             }
             SelectedDetailViewModel = detailViewModel;
            
