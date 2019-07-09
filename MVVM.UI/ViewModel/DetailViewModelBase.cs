@@ -1,4 +1,5 @@
 ﻿using MVVM.UI.Event;
+using MVVM.UI.View.Services;
 using Prism.Commands;
 using Prism.Events;
 using System;
@@ -14,16 +15,52 @@ namespace MVVM.UI.ViewModel
     {
         private bool _hasChanges ;
         private readonly IEventAggregator eventAggregator;
-        public DetailViewModelBase(IEventAggregator EventAggregator)
+        private string _title;
+        protected readonly IMessageDialogService MessageDialogeService;
+        public DetailViewModelBase(IEventAggregator EventAggregator,IMessageDialogService messageDialogService)
 
         {
             eventAggregator = EventAggregator;
+            MessageDialogeService = messageDialogService; 
+            CloseDetailCommand = new DelegateCommand(OnCloseDetailViewExecute);
             SaveCommand = new DelegateCommand(OnSaveExecute, onSaveCanExecute);
             DeleteCommand = new DelegateCommand(onDeleteExecute);
         }
 
+        protected virtual void OnCloseDetailViewExecute()
+        {
+            if (HasChanged)
+            {
+                var result = MessageDialogeService.ShowOkCancelDialog("Are you sure you want to leave There some changes need to be saved", "Warning");
+                if(result == MessageDialogResult.Cancel)
+                {
+                    return;
+                }
+            }
+            eventAggregator.GetEvent<AfterDetailCloseEvent>().Publish(new AfterDetailCloseArgs
+            {
+
+                Id = this.Id,
+                ViewModelName = this.GetType().Name
+            });
+        }
+
+        private int _id;
+
+        public int Id
+        {
+            get { return _id; }
+           protected set { _id = value; }
+        }
+        public string Title { get {
+
+                return _title;            } set {
+                _title = value;
+                OnPropertyChanged(); } }
+
         public ICommand SaveCommand { get; private set; }
         public ICommand DeleteCommand { get; private set; }
+        public ICommand CloseDetailCommand { get; private set; }
         public bool HasChanged {
             get { return _hasChanges; }
             set { _hasChanges = value;
@@ -37,7 +74,7 @@ namespace MVVM.UI.ViewModel
         protected abstract bool onSaveCanExecute();
         protected abstract void onDeleteExecute();
 
-        public abstract Task LoadAsync(int? id);
+        public abstract Task LoadAsync(int id);
 
         protected virtual void RaiseDetailDeletedEvent(int modelId)
         {
@@ -57,7 +94,7 @@ namespace MVVM.UI.ViewModel
 
                 Id = Modelid,
                 DisplayName = displayname,
-                ViewModelNew = this.GetType().Name
+                ViewModelName = this.GetType().Name
             });
         }
 

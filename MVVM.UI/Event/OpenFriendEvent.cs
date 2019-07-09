@@ -12,7 +12,7 @@ namespace MVVM.UI.Event
     }
     public class OpenDetailEventArgs
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string ViewModelName { get; set; }
 
     }

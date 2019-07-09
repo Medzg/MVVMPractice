@@ -94,6 +94,7 @@
     <Compile Include="Data\Repositories\IMeetingRepository.cs" />
     <Compile Include="Data\Repositories\MeetingRepository.cs" />
     <Compile Include="Event\AfterDeleteEvent.cs" />
+    <Compile Include="Event\AfterDetailCloseEvent.cs" />
     <Compile Include="Event\AfterSaveFriendEvent.cs" />
     <Compile Include="Event\OpenFriendEvent.cs" />
     <Compile Include="Startup\BootStrapper.cs" />

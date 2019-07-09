@@ -20,7 +20,7 @@ namespace MVVM.UI.ViewModel
 {
    public class FriendDetailViewModel : DetailViewModelBase, IFriendDetailViewModel
     {
-        private IMessageDialogService _messageDialogService;
+  
         private IFriendDataRepository _dataRepository;
         
         private ILookUpProgramingLangagueDataService _lookUpProgramingLangagueDataService;
@@ -29,10 +29,10 @@ namespace MVVM.UI.ViewModel
         public ObservableCollection<LookUpItem> ProgramingLangagues { get; }
 
         private FriendWrapper _friend;
-        public FriendDetailViewModel(IFriendDataRepository friendDataRepository,IEventAggregator eventAggregator,IMessageDialogService messageDialogService, ILookUpProgramingLangagueDataService programingLangagueDataService) :base(eventAggregator)
+        public FriendDetailViewModel(IFriendDataRepository friendDataRepository,IEventAggregator eventAggregator,IMessageDialogService messageDialogService, ILookUpProgramingLangagueDataService programingLangagueDataService) :base(eventAggregator,messageDialogService)
         {
 
-            _messageDialogService = messageDialogService;
+     
 
             _dataRepository = friendDataRepository;
             
@@ -75,11 +75,11 @@ namespace MVVM.UI.ViewModel
         {
             if( await _dataRepository.HasMeetingAsync(Friend.Id))
             {
-                _messageDialogService.ShowInfoDialog($"You can't delete {Friend.FirstName} {Friend.LastName} cause he have at least one meeting to do ");
+                MessageDialogeService.ShowInfoDialog($"You can't delete {Friend.FirstName} {Friend.LastName} cause he have at least one meeting to do ");
                 return;
             }
 
-            var result = _messageDialogService.ShowOkCancelDialog($"Are you sure you want to delete {Friend.FirstName} {Friend.LastName}","Question");
+            var result = MessageDialogeService.ShowOkCancelDialog($"Are you sure you want to delete {Friend.FirstName} {Friend.LastName}","Question");
             if(result == MessageDialogResult.Ok) { 
             _dataRepository.Delete(Friend.Model);
                 RaiseDetailDeletedEvent( Friend.Id);
@@ -88,11 +88,13 @@ namespace MVVM.UI.ViewModel
         }
         }
 
-        public override async Task LoadAsync(int? FriendId)
+        public override async Task LoadAsync(int FriendId)
         {
 
-            var friend = FriendId.HasValue ? await _dataRepository.GetByIdAsync(FriendId.Value) : CreateNewFriend();
+            var friend = FriendId> 0  ? await _dataRepository.GetByIdAsync(FriendId) : CreateNewFriend();
+            Id = FriendId;
             InitilizeFriend(friend);
+
             InitilizeFriendPhoneNumber(friend.PhoneNumbers);
             await LoadProgramingLanguages();
         }
@@ -141,12 +143,22 @@ namespace MVVM.UI.ViewModel
                 {
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                 }
+                if(e.PropertyName == nameof(Friend.FirstName) || e.PropertyName == nameof(Friend.LastName))
+                {
+                    setTitle();
+                }
             };
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
             if (Friend.Id == 0)
             {
                 Friend.FirstName = "";
             }
+            setTitle();
+        }
+
+        private void setTitle()
+        {
+            Title = Friend.FirstName + " " + Friend.LastName;
         }
 
         private async Task LoadProgramingLanguages()
@@ -201,6 +213,7 @@ namespace MVVM.UI.ViewModel
         {
             await _dataRepository.SaveAsync();
             HasChanged = _dataRepository.HasChanges();
+            Id = Friend.Id;
             RaiseDetailSavedEvent(Friend.Id, this.Friend.FirstName + " " + this.Friend.LastName);
           
             

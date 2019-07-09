@@ -52,7 +52,7 @@ namespace MVVM.UI.ViewModel
 
         private void AfterDetailSaved(AfterSavedEventArgs SavedFriend)
         {
-            switch (SavedFriend.ViewModelNew) {
+            switch (SavedFriend.ViewModelName) {
                 case nameof(FriendDetailViewModel)  :
                     AfterDetailSaved(Friends, SavedFriend);
             break;
@@ -68,7 +68,7 @@ namespace MVVM.UI.ViewModel
             var lookup = items.SingleOrDefault(Friend => Friend.Id == obj.Id);
             if (lookup == null)
             {
-                items.Add(new NavigationItemViewModel(obj.Id, obj.DisplayName, _eventAggregator, obj.ViewModelNew));
+                items.Add(new NavigationItemViewModel(obj.Id, obj.DisplayName, _eventAggregator, obj.ViewModelName));
             }
             else
             {

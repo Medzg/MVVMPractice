@@ -1,5 +1,6 @@
 ﻿using MVVM.Model;
 using MVVM.UI.Data.Repositories;
+using MVVM.UI.Event;
 using MVVM.UI.View.Services;
 using MVVM.UI.Wrapper;
 using Prism.Commands;
@@ -17,22 +18,44 @@ namespace MVVM.UI.ViewModel
   public  class MeetingDetailViewModel :DetailViewModelBase , IMeetingDetailViewModel
     {
         private IMeetingRepository _meetingRepository;
-        private IMessageDialogService _messageDialogSerivce;
+      
         private MeetingWrapper _meeting;
 
         private Friend _SelectedAvailableFriend;
         private Friend _SelectedAddedFriend;
         private List<Friend> _friends;
 
-        public MeetingDetailViewModel(IEventAggregator eventAggregator,IMessageDialogService messageDialogService, IMeetingRepository meetingRepository  ) :base(eventAggregator)
+        public MeetingDetailViewModel(IEventAggregator eventAggregator,IMessageDialogService messageDialogService, IMeetingRepository meetingRepository  ) :base(eventAggregator,messageDialogService)
         {
             _meetingRepository = meetingRepository;
-            _messageDialogSerivce = messageDialogService;
+
+            eventAggregator.GetEvent<AfterSaveFriendEvent>().Subscribe(AfterDetailSaved);
+            eventAggregator.GetEvent<AfterDeleteEvent>().Subscribe(AfterFriendDeleted);
             AddedFriends = new ObservableCollection<Friend>();
             AvailableFriends = new ObservableCollection<Friend>();
             AddFriendCommand = new DelegateCommand(onAddFriendExecute, OnAddFriendCanExecute);
             RemoveFriendCommand = new DelegateCommand(onRemoveFriendExecute, OnRemoveFriendCanExecute);
 
+        }
+
+        private  async void AfterFriendDeleted(AfterDeleteEventArgs args)
+        {
+            if (args.ViewModelName == nameof(FriendDetailViewModel))
+            {
+                await _meetingRepository.ReloadFrienAsync(args.Id);
+                _friends = await _meetingRepository.GetAllFriendsAsync();
+                SetupPickList();
+            }
+        }
+
+        private async void AfterDetailSaved(AfterSavedEventArgs args)
+        {
+           if(args.ViewModelName == nameof(FriendDetailViewModel))
+            {
+                await _meetingRepository.ReloadFrienAsync(args.Id);
+                _friends = await _meetingRepository.GetAllFriendsAsync();
+                SetupPickList();
+            }
         }
 
         private bool OnRemoveFriendCanExecute()
@@ -100,11 +123,11 @@ namespace MVVM.UI.ViewModel
                 _SelectedAddedFriend = value;
                 OnPropertyChanged();
                     ((DelegateCommand)RemoveFriendCommand).RaiseCanExecuteChanged(); } }
-        public async override Task LoadAsync(int? meetingId)
+        public async override Task LoadAsync(int meetingId)
         {
-            var meeting = meetingId.HasValue
-            ? await _meetingRepository.GetByIdAsync(meetingId.Value) : createNewMeeting();
-
+            var meeting = meetingId>0 
+            ? await _meetingRepository.GetByIdAsync(meetingId) : createNewMeeting();
+            Id = meetingId;
             InitializeMeeting(meeting);
             _friends = await _meetingRepository.GetAllFriendsAsync();
             SetupPickList();
@@ -143,6 +166,11 @@ namespace MVVM.UI.ViewModel
                 {
                     ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
                 }
+                if(e.PropertyName == nameof(Meeting.Title))
+                {
+
+                    setTitle();
+                }
 
             };
             ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
@@ -150,6 +178,11 @@ namespace MVVM.UI.ViewModel
             {
                 Meeting.Title = "";
             }
+            setTitle();
+        }
+        private void setTitle()
+        {
+            Title = Meeting.Title;
         }
 
         private Meeting createNewMeeting()
@@ -165,7 +198,7 @@ namespace MVVM.UI.ViewModel
 
         protected override void onDeleteExecute()
         {
-            var result = _messageDialogSerivce.ShowOkCancelDialog($"Do you really want to delete it{Meeting.Title} ", "Warning");
+            var result = MessageDialogeService.ShowOkCancelDialog($"Do you really want to delete it{Meeting.Title} ", "Warning");
             if(result == MessageDialogResult.Ok)
             {
                 _meetingRepository.Delete(Meeting.Model);
@@ -183,6 +216,7 @@ namespace MVVM.UI.ViewModel
         {
             await _meetingRepository.SaveAsync();
             HasChanged = _meetingRepository.HasChanges();
+            Id = Meeting.Id;
             RaiseDetailSavedEvent(Meeting.Id, Meeting.Title);
         }
     }

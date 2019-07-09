@@ -22,21 +22,40 @@ namespace MVVM.UI.ViewModel
             
             _eventAggregator = eventAggregator;
             _messageDialogService = messageDialogeService;
+            DetailViewModels = new ObservableCollection<IDetailViewModel>();
             NavigationViewModel = navigationViewModel;
             _detailViewModelCreator = detailViewModelCreator;
             _eventAggregator.GetEvent<OpenDetailEvent>().Subscribe(OnOpenDetailViewAsync);
             CreateNewDetailCommand = new DelegateCommand<Type>(OnCreateNewDetailExecute);
             _eventAggregator.GetEvent<AfterDeleteEvent>().Subscribe(OnDelete);
+            _eventAggregator.GetEvent<AfterDetailCloseEvent>().Subscribe(AfterDetailClose);
+         
+        }
+
+        private void AfterDetailClose(AfterDetailCloseArgs args)
+        {
+            RemoveDetailViewModel(args.Id, args.ViewModelName);
         }
 
         private void OnDelete(AfterDeleteEventArgs args)
         {
-            DetailViewModel = null;
+            RemoveDetailViewModel(args.Id,args.ViewModelName);
+
         }
+
+        private void RemoveDetailViewModel(int id, string DetailViewModel)
+        {
+            var detailViewModel = DetailViewModels.SingleOrDefault(vm => vm.Id == id && vm.GetType().Name == DetailViewModel);
+            if (detailViewModel != null)
+            {
+                DetailViewModels.Remove(detailViewModel);
+            }
+        }
+        private int nextNewItemId = 0;
 
         private void OnCreateNewDetailExecute(Type viewModelType)
         {
-            OnOpenDetailViewAsync(new OpenDetailEventArgs { ViewModelName =  viewModelType.Name});
+            OnOpenDetailViewAsync(new OpenDetailEventArgs { Id = nextNewItemId --,ViewModelName =  viewModelType.Name});
         }
 
       
@@ -48,15 +67,15 @@ namespace MVVM.UI.ViewModel
         private IIndex<string, IDetailViewModel> _detailViewModelCreator;
 
         public ICommand CreateNewDetailCommand { get; }
+        public ObservableCollection<IDetailViewModel> DetailViewModels { get;}
 
-  
 
-        private IDetailViewModel _detailViewModel;
+        private IDetailViewModel _selectedDetailViewModel;
 
-        public IDetailViewModel DetailViewModel
+        public IDetailViewModel SelectedDetailViewModel
         {
-            get { return _detailViewModel; }
-            set { _detailViewModel = value;
+            get { return _selectedDetailViewModel; }
+            set { _selectedDetailViewModel = value;
                 OnPropertyChanged();
             }
         }
@@ -71,18 +90,16 @@ namespace MVVM.UI.ViewModel
 
         private async void OnOpenDetailViewAsync(OpenDetailEventArgs  args)
         {
-            if(DetailViewModel != null && DetailViewModel.HasChanged)
+           var detailViewModel =  DetailViewModels.SingleOrDefault(vm => vm.Id == args.Id && vm.GetType().Name == args.ViewModelName);
+            if(detailViewModel  == null)
             {
-                var result = _messageDialogService.ShowOkCancelDialog("you made a change ! are you sure to leave , all changes goona lost.", "Warning");
-                if(result == MessageDialogResult.Cancel)
-                {
-                    return;
-                }
-
+                detailViewModel = _detailViewModelCreator[args.ViewModelName];
+                await detailViewModel.LoadAsync(args.Id);
+                DetailViewModels.Add(detailViewModel);
             }
-
-            DetailViewModel = _detailViewModelCreator[args.ViewModelName];
-            await DetailViewModel.LoadAsync(args.Id);
+            SelectedDetailViewModel = detailViewModel;
+           
+           
 
         }
     }

@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace MVVM.UI.Event
 {
-   public class AfterSaveFriendEvent:PubSubEvent<AfterSavedEventArgs>    {
-    }
-
-    public class AfterSavedEventArgs
+   public class AfterDetailCloseEvent : PubSubEvent<AfterDetailCloseArgs>
     {
+    }
+    public class AfterDetailCloseArgs
+    {
+
         public int Id { get; set; }
-        public string DisplayName { get; set; }
         public string ViewModelName { get; set; }
     }
 }
