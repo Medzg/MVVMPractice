@@ -53,5 +53,3 @@ D:\Simple Train\MVVM\MVVM.UI\bin\Debug\sv\Xceed.Wpf.AvalonDock.resources.dll
 D:\Simple Train\MVVM\MVVM.UI\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
 D:\Simple Train\MVVM\MVVM.UI\obj\Debug\View\MeetingDetailView.g.cs
 D:\Simple Train\MVVM\MVVM.UI\obj\Debug\View\MeetingDetailView.baml
-D:\Simple Train\MVVM\MVVM.UI\obj\Debug\View\FriendWindow.g.cs
-D:\Simple Train\MVVM\MVVM.UI\obj\Debug\View\FriendWindow.baml
