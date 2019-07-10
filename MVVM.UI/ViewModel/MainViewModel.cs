@@ -29,7 +29,14 @@ namespace MVVM.UI.ViewModel
             CreateNewDetailCommand = new DelegateCommand<Type>(OnCreateNewDetailExecute);
             _eventAggregator.GetEvent<AfterDeleteEvent>().Subscribe(OnDelete);
             _eventAggregator.GetEvent<AfterDetailCloseEvent>().Subscribe(AfterDetailClose);
-         
+            OpenSingDetailViewCommand = new DelegateCommand<Type>(OpenSingDetailExecute);
+
+
+        }
+
+        private void OpenSingDetailExecute(Type viewModelType)
+        {
+            OnOpenDetailViewAsync(new OpenDetailEventArgs { Id = -1, ViewModelName = viewModelType.Name });
         }
 
         private void AfterDetailClose(AfterDetailCloseArgs args)
@@ -85,6 +92,7 @@ namespace MVVM.UI.ViewModel
         {
             await NavigationViewModel.LoadAsync();
         }
+        public ICommand OpenSingDetailViewCommand { get; }
 
 
 
@@ -94,7 +102,15 @@ namespace MVVM.UI.ViewModel
             if(detailViewModel  == null)
             {
                 detailViewModel = _detailViewModelCreator[args.ViewModelName];
+                try { 
                 await detailViewModel.LoadAsync(args.Id);
+                }
+                catch
+                {
+                    _messageDialogService.ShowInfoDialog("Could not load the entity, maybe it's was delelted in the meantime by another user , the navigation will refresh.");
+                    await NavigationViewModel.LoadAsync();
+                    return;
+                }
                 DetailViewModels.Add(detailViewModel);
 
             }
@@ -103,5 +119,6 @@ namespace MVVM.UI.ViewModel
            
 
         }
+
     }
 }

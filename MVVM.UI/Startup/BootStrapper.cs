@@ -22,10 +22,12 @@ namespace MVVM.UI.Startup
             builder.RegisterType<MainWindow>().AsSelf();
             builder.RegisterType<MeetingRepository>().As<IMeetingRepository>();
             builder.RegisterType<MainViewModel>().AsSelf();
+            builder.RegisterType<ProgrammingLanguageViewModel>().Keyed<IDetailViewModel>(nameof(ProgrammingLanguageViewModel));
             builder.RegisterType<NavigationViewModel>().As<INavigationViewModel>();
             builder.RegisterType<FriendDetailViewModel>().Keyed<IDetailViewModel>(nameof(FriendDetailViewModel));
             builder.RegisterType<MeetingDetailViewModel>().Keyed<IDetailViewModel>(nameof(MeetingDetailViewModel));
             builder.RegisterType<FriendDataRepository>().As<IFriendDataRepository>();
+            builder.RegisterType<ProgrammingLanguageRepository>().As<IProgrammingLanguageRepository>();
             builder.RegisterType<LookUpDataService>().AsImplementedInterfaces();
             return builder.Build();
         }

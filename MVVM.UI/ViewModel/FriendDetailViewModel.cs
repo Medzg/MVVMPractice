@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,8 +44,16 @@ namespace MVVM.UI.ViewModel
             DeletePhoneNumber = new DelegateCommand(OnDeletePhoneNumber, OnDeleteDeletePhoneCanExcute);
 
             PhoneNumbers = new ObservableCollection<FriendPhoneWrapper>();
-
+            eventAggregator.GetEvent<AfterCollectionSavedEvent>().Subscribe(AfterCollectionSaved);
             
+        }
+
+        private async void AfterCollectionSaved(AfterCollectionSavedEventArgs args)
+        {
+           if(args.ViewModelName == nameof(ProgrammingLanguageViewModel))
+            {
+                await LoadProgramingLanguages();
+            }
         }
 
         private void OnAddNewPhoneNumber()
@@ -211,13 +220,17 @@ namespace MVVM.UI.ViewModel
 
        protected override  async void OnSaveExecute()
         {
-            await _dataRepository.SaveAsync();
-            HasChanged = _dataRepository.HasChanges();
-            Id = Friend.Id;
-            RaiseDetailSavedEvent(Friend.Id, this.Friend.FirstName + " " + this.Friend.LastName);
-            MessageDialogeService.ShowInfoDialog("Update Sucess");
-          
-            
+            await OnSaveOptimisticConcurnceyAsyc(_dataRepository.SaveAsync, () =>
+            {
+                HasChanged = _dataRepository.HasChanges();
+                Id = Friend.Id;
+                RaiseDetailSavedEvent(Friend.Id, this.Friend.FirstName + " " + this.Friend.LastName);
+                MessageDialogeService.ShowInfoDialog("Update Sucess");
+            });
+           
+
+
+
         }
 
        protected override bool onSaveCanExecute()

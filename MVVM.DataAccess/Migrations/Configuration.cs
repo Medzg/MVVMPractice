@@ -17,7 +17,7 @@ namespace MVVM.DataAccess.Migrations
         protected override void Seed(MVVM.DataAccess.FriendDbContext context)
         {
             context.Friends.AddOrUpdate(f => f.FirstName,
-                new Friend { FirstName = "Mohamed", LastName = "Zghal" },
+               
      new Friend { FirstName = "Med", LastName = "Zg" },
              new Friend { FirstName = "Mohd", LastName = "Zal" },
             new Friend { FirstName = "Mod", LastName = "hal" },

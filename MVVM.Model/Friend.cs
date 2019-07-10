@@ -24,6 +24,8 @@ namespace MVVM.Model
         [StringLength(60)]
         [EmailAddress]
         public string Email { get; set; }
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
 
         public int? FavoriteLangugeId { get; set; }
 

@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Threading.Tasks;
 
 namespace MVVM.UI.Data.Repositories
@@ -25,6 +26,11 @@ namespace MVVM.UI.Data.Repositories
         public void Delete(TEntity model)
         {
             Context.Set<TEntity>().Remove(model);
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            return await Context.Set<TEntity>().ToListAsync();
         }
 
         public virtual async Task<TEntity> GetByIdAsync(int Id)

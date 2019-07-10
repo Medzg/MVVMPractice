@@ -214,10 +214,14 @@ namespace MVVM.UI.ViewModel
 
         protected  async override void OnSaveExecute()
         {
-            await _meetingRepository.SaveAsync();
-            HasChanged = _meetingRepository.HasChanges();
-            Id = Meeting.Id;
-            RaiseDetailSavedEvent(Meeting.Id, Meeting.Title);
+            await OnSaveOptimisticConcurnceyAsyc(_meetingRepository.SaveAsync,() =>
+            {
+                HasChanged = _meetingRepository.HasChanges();
+                Id = Meeting.Id;
+                RaiseDetailSavedEvent(Meeting.Id, Meeting.Title);
+            });
+          
+           
         }
     }
 }
