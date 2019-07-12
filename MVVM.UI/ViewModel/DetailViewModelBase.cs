@@ -28,7 +28,7 @@ namespace MVVM.UI.ViewModel
             DeleteCommand = new DelegateCommand(onDeleteExecute);
         }
 
-        protected abstract void OnSaveExecute();
+        
         
 
         protected virtual void RaiseCollectionSavedEvent()
@@ -85,7 +85,7 @@ namespace MVVM.UI.ViewModel
 
 
 
-        protected abstract void onSaveExecute();
+        protected abstract void OnSaveExecute();
         protected abstract bool onSaveCanExecute();
         protected abstract void onDeleteExecute();
 
